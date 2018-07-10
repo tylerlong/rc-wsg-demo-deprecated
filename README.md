@@ -1,4 +1,4 @@
-# WSG Demo
+# RingCentral WSG Demo
 
 ```
 yarn install
