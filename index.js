@@ -1,6 +1,8 @@
 import WS from 'ws'
 import RingCentral from 'ringcentral-js-concise'
 import dotenv from 'dotenv'
+import uuid from 'uuid/v1'
+import delay from 'timeout-as-promise'
 
 dotenv.config()
 
@@ -20,19 +22,23 @@ dotenv.config()
   const ws = new WS(process.env.RINGCENTRAL_WSG_URL)
   ws.on('open', function open () {
     console.log('open')
-    ws.send([
-      {
-        'type': 'ClientRequest',
-        'messageId': 'uniq-message-id',
-        'method': 'GET',
-        'path': '/restapi/v1.0/account/~/extension/~',
-        'headers': {
-          'Authorization': `Bearer ${accessToken}`
+    ws.send(JSON.stringify(
+      [
+        {
+          'type': 'ClientRequest',
+          'messageId': uuid(),
+          'method': 'GET',
+          'path': '/restapi/v1.0/account/~/extension/~',
+          'headers': {
+            Authorization: `Bearer ${accessToken}`
+          }
         }
-      }
-    ])
+      ]
+    ))
   })
   ws.on('message', function incoming (data) {
     console.log('message', data)
   })
+
+  await delay(10000)
 })()
