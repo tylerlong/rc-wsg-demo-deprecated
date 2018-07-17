@@ -27,16 +27,24 @@ dotenv.config()
         {
           'type': 'ClientRequest',
           'messageId': uuid(),
-          'method': 'GET',
-          'path': '/restapi/v1.0/account/~/extension/~',
+          'method': 'POST',
+          'path': '/restapi/v1.0/subscription',
           'headers': {
             Authorization: `Bearer ${accessToken}`
+          }
+        },
+        {
+          eventFilters: [
+            '/restapi/v1.0/account/~/extension/~/message-store'
+          ],
+          deliveryMode: {
+            transportType: 'WebSocket'
           }
         }
       ]
     ))
 
-    await delay(5000)
+    await delay(15000)
 
     ws.send(JSON.stringify(
       [
@@ -57,6 +65,7 @@ dotenv.config()
       ]
     ))
   })
+
   ws.on('message', (data) => {
     console.log('message', data)
   })
